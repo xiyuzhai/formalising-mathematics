@@ -65,7 +65,8 @@ the `assumption` tactic.
 theorem id : P → P :=
 begin
   -- Prove this using `intro` and `exact`
-  sorry
+  intro p,
+  exact p,
 end
 
 /-
@@ -89,21 +90,32 @@ begin
   -- remember that by definition the goal is P → (Q → P).
   -- Prove this proposition using `intro` and `exact`.
   -- Experiment. Can you prove it using `intros` and `assumption`?
-  sorry
+  intro p,
+  intro q,
+  exact p
 end
 
 /-- If we know `P`, and we also know `P → Q`, we can deduce `Q`. -/
 lemma modus_ponens : P → (P → Q) → Q :=
 begin
   -- You might find the `apply` tactic useful here.
-  sorry
+  intro p,
+  intro hpq,
+  apply hpq,
+  exact p
 end
 
 /-- implication is transitive -/
 lemma imp_trans : (P → Q) → (Q → R) → (P → R) :=
 begin
   -- The tactics you know should be enough
-  sorry
+  intro hpq,
+  intro hqr,
+  intro p,
+  apply hqr,
+  apply hpq,
+  exact p
+
 end
 
 -- This one is a "relative modus ponens" -- in the
@@ -112,7 +124,11 @@ lemma forall_imp : (P → Q → R) → (P → Q) → (P → R) :=
 begin
   -- `intros hPQR hPQ hP,` would be a fast way to start.
   -- Make sure you understand what is going on there, if you use it.
-  sorry
+  intros hPQR hPQ hP,
+  apply hPQR,
+  exact hP,
+  apply hPQ,
+  exact hP
 end
 
 /-
@@ -140,7 +156,10 @@ begin
   rw not_iff_imp_false,
   -- You can use `rw not_iff_imp_false` to change `¬ X` into `X → false`. 
   -- But you don't actually have to, because they are the same *by definition*
-  sorry,
+  rw not_iff_imp_false,
+  intro hf,
+  apply hf,
+  exact hP
 end
 
 -- Here is a funny alternative proof! Can you work out how it works?
@@ -160,7 +179,13 @@ example : P → ¬ (¬ P) :=
 -- "proof by contradiction".
 theorem modus_tollens : (P → Q) → (¬ Q → ¬ P) :=
 begin
-  sorry,
+intro hPQ,
+intro hNQ,
+rw not_iff_imp_false,
+intro hP,
+apply hNQ,
+apply hPQ,
+exact hP
 end
 
 -- This one cannot be proved using constructive mathematics!

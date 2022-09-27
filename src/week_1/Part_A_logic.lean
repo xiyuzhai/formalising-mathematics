@@ -194,7 +194,10 @@ end
 -- Try it without using these, and you'll get stuck!
 theorem double_negation_elimination : ¬ (¬ P) → P :=
 begin
-  sorry,
+rw not_iff_imp_false,
+intro h,
+by_contra h2,
+exact h h2
 end
 
 /-!
@@ -238,12 +241,16 @@ theorem and.elim_left : P ∧ Q → P :=
 begin
   -- I would recommend starting with
   -- `intro hPaQ,` and then `cases hPaQ with hP hQ`.
-  sorry
+intro hPaQ,
+cases hPaQ with hP hQ,
+exact hP,
 end
 
 theorem and.elim_right : P ∧ Q → Q :=
 begin
-  sorry
+intro hPaQ,
+cases hPaQ with hP hQ,
+exact hQ,
 end
 
 -- fancy term mode proof
@@ -252,25 +259,33 @@ example : P ∧ Q → Q := λ hPaQ, hPaQ.2
 theorem and.intro : P → Q → P ∧ Q :=
 begin
   -- remember the `split` tactic.
-  sorry
+intros hP hQ,
+split,
+exact hP,
+exact hQ,
 end
 
 /-- the eliminator for `∧` -/ 
 theorem and.elim : P ∧ Q → (P → Q → R) → R :=
 begin
-  sorry,
+  rintro ⟨hP, hQ⟩ hPQR,
+  exact hPQR hP hQ,
 end
 
 /-- The recursor for `∧` -/
 theorem and.rec : (P → Q → R) → P ∧ Q → R :=
 begin
-  sorry
+rintro hPQR ⟨hP, hQ⟩,
+exact hPQR hP hQ,
 end
 
 /-- `∧` is symmetric -/
 theorem and.symm : P ∧ Q → Q ∧ P :=
 begin
-  sorry
+rintro ⟨ hP,hQ⟩ ,
+split ,
+exact hQ,
+exact hP,
 end
 
 -- term mode proof
@@ -284,7 +299,11 @@ begin
   -- If you like, try starting this proof with `rintro ⟨hP, hQ⟩` if you want
   -- to experiment with it. Get the pointy brackets with `\<` and `\>`,
   -- or both at once with `\<>`.
-  sorry,
+rintro ⟨ hP,hQ⟩,
+rintro ⟨ hQ,hR⟩, 
+split,
+exact hP,
+exact hR,
 end
 
 /-
@@ -301,7 +320,9 @@ Let's go the other way.
 
 lemma imp_imp_of_and_imp : ((P ∧ Q) → R) → (P → Q → R) :=
 begin
-  sorry,
+intro hPaQR,
+intros hP hQ,
+exact hPaQR ⟨hP,hQ⟩
 end
 
 

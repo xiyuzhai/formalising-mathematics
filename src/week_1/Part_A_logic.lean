@@ -342,7 +342,11 @@ a hypothesis `h : P ↔ Q`, and `split` if you have a goal `⊢ P ↔ Q`.
 theorem iff.refl : P ↔ P :=
 begin
   -- start with `split`
-  sorry,
+  split,
+  intro p,
+  exact p,
+  intro p,
+  exact p,
 end
 
 -- If you get stuck, there is always the "truth table" tactic `tauto!`
@@ -360,7 +364,9 @@ end
 /-- `↔` is symmetric -/
 theorem iff.symm : (P ↔ Q) → (Q ↔ P) :=
 begin
-  sorry
+intro hpq,
+rw hpq,
+
 end
 
 -- NB there is quite a devious proof of this using `rw`.
@@ -372,22 +378,35 @@ example : (P ↔ Q) → (Q ↔ P) :=
 /-- `↔` is commutative -/
 theorem iff.comm : (P ↔ Q) ↔ (Q ↔ P) :=
 begin
-  sorry
+split,
+intro hpq,
+rw hpq,
+intro hpq,
+rw hpq
 end
 
 -- without rw or cc this is painful!
 /-- `↔` is transitive -/
 theorem iff.trans :  (P ↔ Q) → (Q ↔ R) → (P ↔ R) :=
 begin
-  sorry,
+intro hpq,
+intro hqr,
+rw ←hqr,
+exact hpq,
 end
 
 -- This can be done constructively, but it's hard. You'll need to know
 -- about the `have` tactic to do it. Alternatively the truth table
 -- tactic `tauto!` will do it.
 theorem iff.boss : ¬ (P ↔ ¬ P) :=
-begin
-  sorry
+begin 
+  rintro ⟨h1, h2⟩,
+  have hnP : ¬ P,
+  {
+    intro hp,
+    exact h1 hp hp,
+  },
+  exact hnP (h2 hnP),
 end
 
 -- Now we have iff we can go back to and.
@@ -399,7 +418,8 @@ end
 /-- `∧` is commutative -/
 theorem and.comm : P ∧ Q ↔ Q ∧ P :=
 begin
-  sorry,
+split;
+apply and.symm
 end
 
 -- fancy term-mode proof
